@@ -128,6 +128,11 @@ def careers_cs():
     """Computer Science Careers page"""
     return render_template('careers_new.html')
 
+@app.route('/careers/health')
+def careers_health():
+    """Health Care Careers page"""
+    return render_template('careers_health.html')
+
 @app.route('/careers/habitation')
 def careers_habitation():
     """Habitation Careers page"""
@@ -287,9 +292,12 @@ def careers():
     if category == 'cs':
         return redirect(url_for('careers_cs'))
     
+    if category == 'health':
+        return redirect(url_for('careers_health'))
+    
     if category == 'habitation':
         return redirect(url_for('careers_habitation'))
-        
+
     if category == 'polsci':
         return redirect(url_for('careers_polsci'))
 
@@ -324,6 +332,11 @@ def contact():
 def more():
     """More/Contact page"""
     return render_template('contact.html')
+
+@app.route('/about')
+def about():
+    """About Us page"""
+    return render_template('About_US.html')
 
 
 @app.route('/register-page')
