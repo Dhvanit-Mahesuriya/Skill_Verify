@@ -1,0 +1,267 @@
+/* Chatbot Styles */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* High specificity to override any defaults */
+body .chatbot-toggler {
+    position: fixed !important;
+    top: 30px !important;
+    bottom: auto !important;
+    right: 35px !important;
+    outline: none;
+    border: none;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+    z-index: 99999;
+}
+
+body .chatbot-toggler:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+}
+
+.chatbot-toggler span {
+    color: #fff;
+    position: absolute;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.chatbot-toggler span:last-child,
+.chatbot-toggler.show-chatbot span:first-child  {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.chatbot-toggler.show-chatbot span:last-child {
+    opacity: 1;
+    transform: scale(1);
+}
+
+body .chatbot {
+    position: fixed !important;
+    top: 90px !important;
+    bottom: auto !important;
+    right: 35px !important;
+    width: 420px;
+    background: rgba(23, 23, 41, 0.85) !important; /* Extremely dark, almost black, with blur */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9) translateY(-20px);
+    transform-origin: top right;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 99998;
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
+    font-family: 'Poppins', sans-serif;
+}
+
+.chatbot.show-chatbot {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+}
+
+.chatbot header {
+    padding: 20px 0;
+    position: relative;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.chatbot header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.chatbot header span {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    color: #fff;
+    cursor: pointer;
+    display: none;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    transition: transform 0.2s ease;
+}
+
+.chatbot header span:hover {
+    transform: translateY(-50%) scale(1.1);
+    color: #ffd700;
+}
+
+.chatbox {
+    overflow-y: auto;
+    height: 400px;
+    padding: 30px 20px 80px;
+}
+
+.chatbox::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chatbox::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+.chatbox::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15); 
+    border-radius: 10px;
+}
+
+.chatbox .chat {
+    display: flex;
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.chatbox .outgoing {
+    justify-content: flex-end;
+    margin: 20px 0;
+}
+
+.chatbox .incoming span {
+    width: 38px;
+    height: 38px;
+    color: #fff;
+    cursor: default;
+    text-align: center;
+    line-height: 38px;
+    align-self: flex-end;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    margin: 0 10px 0 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    font-size: 1.2rem;
+}
+
+.chatbox .chat p {
+    white-space: pre-wrap;
+    padding: 14px 18px;
+    border-radius: 20px 20px 20px 4px; /* Unique shape for incoming */
+    max-width: 80%;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.chatbox .outgoing p {
+    border-radius: 20px 20px 4px 20px; /* Unique shape for outgoing */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.chatbox .incoming p {
+    border-radius: 20px 20px 20px 4px;
+    color: #e0e0e0;
+    background: rgba(255, 255, 255, 0.08); /* More subtle glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chatbox .chat p.error {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.08);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.chat-input {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    background: rgba(23, 23, 41, 0.95);
+    padding: 15px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.chat-input textarea {
+    height: 50px;
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    max-height: 150px;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.05) !important; /* Ensure it's not white! */
+    border-radius: 25px;
+    color: #fff !important;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.3s ease;
+}
+
+.chat-input textarea:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.chat-input textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.chat-input span {
+    align-self: center;
+    color: #a68de3;
+    cursor: pointer;
+    height: 45px;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    font-size: 1.4rem;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+}
+
+.chat-input textarea:valid ~ span {
+    visibility: visible;
+}
+
+.chat-input span:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+@media (max-width: 490px) {
+    .chatbot-toggler {
+        top: 20px;
+        right: 20px;
+        bottom: auto;
+    }
+    .chatbot {
+        right: 0;
+        bottom: 0;
+        top: 0; /* Full screen on mobile */
+        height: 100%;
+        border-radius: 0;
+        width: 100%;
+    }
+    .chatbot .chatbox {
+        height: 90%;
+        padding: 25px 15px 100px;
+    }
+    .chatbot .chat-input {
+        padding: 15px;
+    }
+    .chatbot header span {
+        display: block;
+    }
+}

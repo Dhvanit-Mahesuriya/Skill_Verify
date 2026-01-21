@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SkillVerify{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}?v=2">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Animated Gradient Background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Floating Orbs -->
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <!-- Particles Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav" id="topNav">
+        <div class="logo-section">
+            <div class="brand" onclick="window.location.href='/'">Skill<span>Verify</span></div>
+            <div class="nav-links">
+                <a href="/" id="navDashboard">Dashboard</a>
+                <a href="#" id="navCareerTestBtn">Career Test</a>
+                <a href="/organizations">For Organizations</a>
+                <div class="nav-item">
+                    <a href="#">Careers <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown">
+                        <a href="/careers/cs" class="dropdown-item">
+                            <span class="dropdown-icon">💻</span>
+                            <span>Computer Science</span>
+                        </a>
+                        <a href="/careers?cat=health" class="dropdown-item">
+                            <span class="dropdown-icon">⚕️</span>
+                            <span>Health Care</span>
+                        </a>
+                            <a href="/careers/habitation" class="dropdown-item">
+                                <span class="item-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">🏡</span>
+                                <div class="item-content">
+                                    <div class="item-title">Habitation</div>
+                                    <div class="item-desc">Architecture & Design</div>
+                                </div>
+                            </a>
+                            <a href="/careers/polsci" class="dropdown-item">
+                                <span class="item-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">🏛️</span>
+                                <div class="item-content">
+                                    <div class="item-title">Political Science</div>
+                                    <div class="item-desc">Public Policy & Government</div>
+                                </div>
+                            </a>
+                        <a href="/careers?cat=veteran" class="dropdown-item">
+                            <span class="dropdown-icon">🎖️</span>
+                            <span>Veteran</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/community">Community</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <!-- Guest View -->
+            <div id="guestActions">
+                <button class="btn-login" id="loginBtn">Log In</button>
+                <button class="btn-cta">Take the free test</button>
+            </div>
+
+            <!-- Logged In View -->
+            <div id="userActions" style="display: none; align-items: center; gap: 15px;">
+                <div class="user-greeting" style="color: white; font-weight: 500;">Hi, <span id="userNameDisplay">User</span></div>
+                <button class="btn-login" id="logoutBtn" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.2);">Log Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">×</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Welcome Back</h2>
+                <p class="modal-subtitle">Log in to continue your journey</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" placeholder="Enter your password" required>
+                </div>
+                <div class="form-options">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-submit">Log In</button>
+            </form>
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            <div class="social-login">
+                <button class="btn-social">
+                    <span>🔵</span>
+                    <span>Google</span>
+                </button>
+                <button class="btn-social">
+                    <span>📘</span>
+                    <span>Facebook</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                Don't have an account? <a href="#" id="showRegisterModal">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <button class="modal-close" id="closeRegisterModal">×</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Create Account</h2>
+                <p class="modal-subtitle">Join SkillVerify to start your journey</p>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn-submit">Create Account</button>
+            </form>
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            <div class="social-login">
+                <button class="btn-social">
+                    <span>🔵</span>
+                    <span>Google</span>
+                </button>
+                <button class="btn-social">
+                    <span>📘</span>
+                    <span>Facebook</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                Already have an account? <a href="#" id="showLoginModal">Log In</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    {% block content %}
+    {% endblock %}
+
+
+    <!-- Chatbot Modal -->
+    <button class="chatbot-toggler">
+        <span class="material-symbols-rounded">💬</span>
+        <span class="material-symbols-rounded">close</span>
+    </button>
+    <div class="chatbot">
+        <header>
+            <h2>Chat AI</h2>
+            <span class="close-btn material-symbols-rounded">close</span>
+        </header>
+        <ul class="chatbox">
+            <li class="chat incoming">
+                <span class="material-symbols-rounded">smart_toy</span>
+                <p>Hi there 👋<br>How can I help you regarding career guidance or SkillVerify today?</p>
+            </li>
+        </ul>
+        <div class="chat-input">
+            <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
+            <span id="send-btn" class="material-symbols-rounded">send</span>
+        </div>
+    </div>
+    
+    <!-- Google Fonts for Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <script>
+        // --- Chatbot Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+             const chatbotToggler = document.querySelector(".chatbot-toggler");
+             const closeBtn = document.querySelector(".close-btn");
+             const chatbox = document.querySelector(".chatbox");
+             const chatInput = document.querySelector(".chat-input textarea");
+             const sendChatBtn = document.querySelector(".chat-input span");
+
+             let userMessage = null; 
+             const inputInitHeight = chatInput.scrollHeight;
+
+             const createChatLi = (message, className) => {
+                 const chatLi = document.createElement("li");
+                 chatLi.classList.add("chat", className);
+                 let chatContent = className === "outgoing" ? `<p></p>` : `<span class="material-symbols-rounded">smart_toy</span><p></p>`;
+                 chatLi.innerHTML = chatContent;
+                 chatLi.querySelector("p").textContent = message;
+                 return chatLi; 
+             }
+
+             const generateResponse = (chatElement) => {
+                 const API_URL = "/api/chat";
+                 const messageElement = chatElement.querySelector("p");
+
+                 const requestOptions = {
+                     method: "POST",
+                     headers: {
+                         "Content-Type": "application/json",
+                     },
+                     body: JSON.stringify({
+                         message: userMessage
+                     })
+                 }
+
+                 fetch(API_URL, requestOptions).then(res => res.json()).then(data => {
+                     messageElement.textContent = data.message;
+                 }).catch(() => {
+                     messageElement.classList.add("error");
+                     messageElement.textContent = "Oops! Something went wrong. Please try again.";
+                 }).finally(() => chatbox.scrollTo(0, chatbox.scrollHeight));
+             }
+
+             const handleChat = () => {
+                 userMessage = chatInput.value.trim(); 
+                 if(!userMessage) return;
+
+                 chatInput.value = "";
+                 chatInput.style.height = `${inputInitHeight}px`;
+
+                 chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+                 chatbox.scrollTo(0, chatbox.scrollHeight);
+
+                 setTimeout(() => {
+                     const incomingChatLi = createChatLi("Thinking...", "incoming");
+                     chatbox.appendChild(incomingChatLi);
+                     chatbox.scrollTo(0, chatbox.scrollHeight);
+                     generateResponse(incomingChatLi);
+                 }, 600);
+             }
+
+             chatInput.addEventListener("input", () => {
+                 chatInput.style.height = `${inputInitHeight}px`;
+                 chatInput.style.height = `${chatInput.scrollHeight}px`;
+             });
+
+             chatInput.addEventListener("keydown", (e) => {
+                 if(e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+                     e.preventDefault();
+                     handleChat();
+                 }
+             });
+
+             sendChatBtn.addEventListener("click", handleChat);
+             closeBtn.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
+             chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+             
+             // Close chatbot when clicking the toggler updates the body class
+             chatbotToggler.addEventListener("click", () => {
+                 const chatbot = document.querySelector(".chatbot");
+                 const toggler = document.querySelector(".chatbot-toggler");
+                 chatbot.classList.toggle("show-chatbot");
+                 toggler.classList.toggle("show-chatbot");
+             });
+             
+             closeBtn.addEventListener("click", () => {
+                 const chatbot = document.querySelector(".chatbot");
+                 const toggler = document.querySelector(".chatbot-toggler");
+                 chatbot.classList.remove("show-chatbot");
+                 toggler.classList.remove("show-chatbot");
+             });
+        });
+
+        // --- Shared Authentication Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Login Modal Logic
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loginModal = document.getElementById('loginModal');
+            const closeModal = document.getElementById('closeModal');
+            const loginForm = document.getElementById('loginForm');
+            
+            // Register Modal Logic
+            const registerModal = document.getElementById('registerModal');
+            const closeRegisterModal = document.getElementById('closeRegisterModal');
+            const registerForm = document.getElementById('registerForm');
+            const showRegisterModalLink = document.getElementById('showRegisterModal');
+            const showLoginModalLink = document.getElementById('showLoginModal');
+
+            // Open Login Modal
+            if (loginBtn) {
+                loginBtn.addEventListener('click', () => {
+                    loginModal.classList.add('active');
+                });
+            }
+
+            // Close Modals
+            if (closeModal) {
+                closeModal.addEventListener('click', () => {
+                    loginModal.classList.remove('active');
+                });
+            }
+
+            if (closeRegisterModal) {
+                closeRegisterModal.addEventListener('click', () => {
+                    registerModal.classList.remove('active');
+                });
+            }
+
+            // Switch between Login and Register
+            if (showRegisterModalLink) {
+                showRegisterModalLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginModal.classList.remove('active');
+                    registerModal.classList.add('active');
+                });
+            }
+
+            if (showLoginModalLink) {
+                showLoginModalLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    registerModal.classList.remove('active');
+                    loginModal.classList.add('active');
+                });
+            }
+
+            // Outside Click Close
+            window.addEventListener('click', (e) => {
+                if (e.target === loginModal) loginModal.classList.remove('active');
+                if (e.target === registerModal) registerModal.classList.remove('active');
+            });
+
+            // Handle Login
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = loginForm.querySelector('input[type="email"]').value;
+                    const password = loginForm.querySelector('input[type="password"]').value;
+                    const rememberMe = document.getElementById('rememberMe').checked;
+
+                    try {
+                        const response = await fetch('/api/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, password, rememberMe })
+                        });
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            loginModal.classList.remove('active');
+                            updateAuthUI(data.user);
+                            window.location.reload(); // Simple reload to refresh page state
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        alert('An error occurred during login');
+                    }
+                });
+            }
+
+            // Handle Registration
+            if (registerForm) {
+                registerForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const inputs = registerForm.querySelectorAll('input');
+                    const name = inputs[0].value;
+                    const email = inputs[1].value;
+                    const password = inputs[2].value;
+
+                    try {
+                        const response = await fetch('/api/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, email, password })
+                        });
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            registerModal.classList.remove('active');
+                            updateAuthUI(data.user);
+                            window.location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Registration error:', error);
+                        alert('An error occurred during registration');
+                    }
+                });
+            }
+
+            // Handle Logout
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('/api/logout', { method: 'POST' });
+                        const data = await response.json();
+                        if (data.success) {
+                            window.location.href = '/'; // Redirect to home
+                        }
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                    }
+                });
+            }
+            
+            // Check auth status on load
+            checkAuthStatus();
+        });
+
+        async function checkAuthStatus() {
+            console.log('Checking auth status...');
+            try {
+                const response = await fetch('/api/dashboard-data');
+                const data = await response.json();
+                console.log('Auth check response:', data);
+                if (data.success) {
+                    updateAuthUI(data.user);
+                } else {
+                    updateAuthUI(null);
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                updateAuthUI(null);
+            }
+        }
+
+        function updateAuthUI(user) {
+            const guestActions = document.getElementById('guestActions');
+            const userActions = document.getElementById('userActions');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const guestView = document.getElementById('guest-view');
+            const userView = document.getElementById('user-view');
+
+            if (user) {
+                // Logged In
+                if(guestActions) guestActions.style.display = 'none';
+                if(userActions) userActions.style.display = 'flex';
+                if(userNameDisplay) userNameDisplay.textContent = user.name;
+                
+                // Toggle Views
+                if(guestView) guestView.style.display = 'none';
+                if(userView) userView.style.display = 'block';
+            } else {
+                // Not Logged In
+                if(guestActions) guestActions.style.display = 'flex';
+                if(userActions) userActions.style.display = 'none';
+                
+                // Toggle Views
+                if(guestView) guestView.style.display = 'block';
+                if(userView) userView.style.display = 'none';
+            }
+        }
+        
+        // Particle Animation
+        const canvas = document.getElementById('particles-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 50;
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x > canvas.width) this.x = 0;
+                    if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0;
+                    if (this.y < 0) this.y = canvas.height;
+                }
+                draw() {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+    </script>
+
+
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
