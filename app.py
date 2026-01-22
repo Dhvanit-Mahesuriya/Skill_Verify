@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -128,11 +129,6 @@ def careers_cs():
     """Computer Science Careers page"""
     return render_template('careers_new.html')
 
-@app.route('/careers/health')
-def careers_health():
-    """Health Care Careers page"""
-    return render_template('careers_health.html')
-
 @app.route('/careers/habitation')
 def careers_habitation():
     """Habitation Careers page"""
@@ -142,6 +138,12 @@ def careers_habitation():
 def careers_polsci():
     """Political Science Careers page"""
     return render_template('careers_polsci.html')
+
+
+@app.route('/careers/healthcare')
+def careers_healthcare():
+    """Health Care Careers page"""
+    return render_template('Health_care.html')
 
 
 
@@ -292,12 +294,9 @@ def careers():
     if category == 'cs':
         return redirect(url_for('careers_cs'))
     
-    if category == 'health':
-        return redirect(url_for('careers_health'))
-    
     if category == 'habitation':
         return redirect(url_for('careers_habitation'))
-
+        
     if category == 'polsci':
         return redirect(url_for('careers_polsci'))
 
@@ -327,11 +326,6 @@ def contact():
     """Contact page"""
     return render_template('contact.html')
 
-
-@app.route('/more')
-def more():
-    """More/Contact page"""
-    return render_template('contact.html')
 
 @app.route('/about')
 def about():
